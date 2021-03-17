@@ -127,7 +127,7 @@ const addRoles = () => {
         'INSERT INTO role SET ?',
         {
           title: answer.title,
-          salary: answer.salary,
+          salary: answer.salary || 0,
           department_id: answer.department
         },
         (err) => {
@@ -178,10 +178,10 @@ const addEmployee = () => {
       connection.query(
         'INSERT INTO role SET ?',
         {
-          first_name: answer.title,
-          last_name: answer.salary,
-          role_id: answer.department,
-          manager_id: answer.department
+          first_name: answer.firstName,
+          last_name: answer.lastName,
+          role_id: answer.roleId,
+          manager_id: answer.managerId
         },
         (err) => {
           if (err) throw err;
@@ -203,5 +203,47 @@ const viewEmployee = () => {
 
 };
 
-
+const updateEmployee = () => {
+  connection.query('SELECT * FROM employee', (err, results) => {
+    if (err) throw err;
+    inquirer
+      .prompt([
+        {
+          name: 'title',
+          type: 'input',
+          message: 'What employee would you like to update?',
+          choices: () => results.map((employee) => {
+            return {
+              name: employee.first_name,
+              name: employee.last_name,
+              name: employee.role_id,
+              name: employee.manager_id,
+              value: employee.id
+            }
+          }),
+        },
+        {
+          name: 'firstName',
+          type: 'input',
+          message: 'Enter updated first name?',
+        },
+        {
+          name: 'lastName',
+          type: 'input',
+          message: 'Enter updated last name?',
+        },
+        {
+          name: 'roleId',
+          type: 'input',
+          message: 'Enter updated role id.',
+        },
+        {
+          name: 'managerId',
+          type: 'input',
+          message: 'Enter updated department id.',
+        }
+      ])
+      .then();
+  })
+}
 
