@@ -23,27 +23,27 @@ const start = () => {
       type: 'rawlist',
       message: 'Would you like to do?',
       choices: [
-        'Add departments',
-        'Add roles',
-        'Add employees',
+        'Add department',
+        'Add role',
+        'Add employee',
         'View departments',
         'View roles',
-        'View employees',
+        'View employee',
         'Update employee roles',
         'Exit'
       ],
     })
     .then((answer) => {
       switch (answer.action) {
-        case 'Add departments':
+        case 'Add department':
           addDepartment();
           break;
 
-        case 'Add roles':
+        case 'Add role':
           addRoles();
           break;
 
-        case 'Add employees':
+        case 'Add employee':
           addEmployee();
           break;
 
@@ -55,7 +55,7 @@ const start = () => {
           viewRoles();
           break;
 
-        case 'View employees':
+        case 'View employee':
           viewEmployee();
           break;
 
@@ -64,7 +64,7 @@ const start = () => {
           break;
 
         default:
-          console.log(`Invalid action: ${answer.action}`)
+          quit()
       }
     });
 
@@ -98,7 +98,7 @@ const viewDepartment = () => {
 
     // Log all results of the SELECT statement
     console.table(dep);
-    connection.end();
+    start();
   });
 
 };
@@ -140,12 +140,12 @@ const addRoles = () => {
 };
 
 const viewRoles = () => {
-  connection.query('SELECT * FROM role', (err, dep) => {
+  connection.query('SELECT * FROM role', (err, role) => {
     if (err) throw err;
 
     // Log all results of the SELECT statement
-    console.table(dep);
-    connection.end();
+    console.table(role);
+    start();
   });
 
 };
@@ -166,17 +166,17 @@ const addEmployee = () => {
       {
         name: 'roleId',
         type: 'input',
-        message: 'What id would you like to give this employee?',
+        message: 'What role would you like to give the employee?',
       },
       {
         name: 'managerId',
         type: 'input',
-        message: 'What id would you like to give this department?',
+        message: 'Who is the employee\'s manager?',
       }
     ])
     .then((answer) => {
       connection.query(
-        'INSERT INTO role SET ?',
+        'INSERT INTO employee SET ?',
         {
           first_name: answer.firstName,
           last_name: answer.lastName,
@@ -193,57 +193,46 @@ const addEmployee = () => {
 };
 
 const viewEmployee = () => {
-  connection.query('SELECT * FROM employee', (err, dep) => {
+  connection.query('SELECT * FROM employee', (err, employee) => {
     if (err) throw err;
 
     // Log all results of the SELECT statement
-    console.table(dep);
-    connection.end();
+    console.table(employee);
+    // connection.end();
+    start()
   });
 
 };
 
 const updateEmployee = () => {
-  connection.query('SELECT * FROM employee', (err, results) => {
-    if (err) throw err;
-    inquirer
-      .prompt([
-        {
-          name: 'title',
-          type: 'input',
-          message: 'What employee would you like to update?',
-          choices: () => results.map((employee) => {
-            return {
-              name: employee.first_name,
-              name: employee.last_name,
-              name: employee.role_id,
-              name: employee.manager_id,
-              value: employee.id
-            }
-          }),
-        },
-        {
-          name: 'firstName',
-          type: 'input',
-          message: 'Enter updated first name?',
-        },
-        {
-          name: 'lastName',
-          type: 'input',
-          message: 'Enter updated last name?',
-        },
-        {
-          name: 'roleId',
-          type: 'input',
-          message: 'Enter updated role id.',
-        },
-        {
-          name: 'managerId',
-          type: 'input',
-          message: 'Enter updated department id.',
+  inquirer
+    .prompt([
+      {
+        name: 'eUpdate',
+        type: 'input',
+        message: 'Which employee would you like to update info on?',
+      },
+      {
+        name: 'eRoleUpdate',
+        type: 'input',
+        message: 'What do you want to update?',
+      }
+    ])
+    .then((answer) => {
+      connection.query('INSERT INTO employee SET role_id = ? WHERE first_name = ?',
+        [
+          answer.eRoleUpdate,
+          answer.eUpdate
+        ],
+        (err) => {
+          if (err) throw err;
+          console.log('You employee was updated');
+          start();
         }
-      ])
-      .then();
-  })
+      )
+    });
+};
+const quit = () => {
+  connection.end();
 }
-
+// 
