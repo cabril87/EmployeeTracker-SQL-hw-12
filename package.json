@@ -2,10 +2,10 @@
   "name": "EmployeeTracker-SQL-hw-12",
   "version": "1.0.0",
   "description": "Homework 12",
-  "main": "employeeTracker.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node employeeTracker"
+    "start": "node index"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/cabril87/EmployeeTracker-SQL-hw-12#readme",
   "dependencies": {
     "inquirer": "^8.0.0",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "util": "^0.12.3"
   }
 }
