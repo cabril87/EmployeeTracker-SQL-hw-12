@@ -89,8 +89,9 @@ const addDepartment = () => {
                 name: answers.addDepartment
             }
             DB.addDepartment(department).then(res => {
+                console.table(res)
                 viewDepartment()
-                
+
             })
         })
 }
@@ -99,7 +100,7 @@ const addRole = async () => {
     const departmentArray = departmentView.map(({ id, name }) => ({
         name: name,
         value: id
-        
+
     }))
     inquirer
         .prompt([
@@ -120,37 +121,37 @@ const addRole = async () => {
                 choices: departmentArray
             }
         ]).then(answer => {
-            console.log(answer)
+            // console.log(answer)
             const role = {
                 title: answer.title,
                 salary: answer.salary || 0,
                 department_id: answer.department
             }
             DB.addRole(role).then(res => {
+                console.table(res)
                 viewRole()
-                
+
 
             });
-            
+
         })
-       
+
 }
 
 const addEmployee = async () => {
     const role = await DB.viewRole();
-   
+
     const roleArray = role.map(({ title, id }) => ({
-        name: title, 
+        name: title,
         value: id
     }));
-    
+
     const employee = await DB.viewEmployee();
     console.log(employee)
     const managers = employee.map(({ first_name, last_name, id }) => ({
-        name: first_name + " " + last_name ,
+        name: first_name + " " + last_name,
         value: id
     }))
-    // console.log(managers)
     inquirer
         .prompt([
             {
@@ -176,43 +177,32 @@ const addEmployee = async () => {
                 choices: managers
             }
         ])
-       
+
         .then(answer => {
             console.log(answer)
             const employee = {
                 first_name: answer.first_name,
                 last_name: answer.last_name,
                 role_id: answer.role_id,
-                manager_id: amswer.manager_id
+                manager_id: answer.manager_id
             }
             DB.addEmployee(employee).then(res => {
+                console.table(res)
                 viewEmployee()
-                
+
             })
         })
-        
+
 
 }
 const updateEmployeeRole = async () => {
     const employee = await DB.viewEmployee();
-    
+
     const employeeArray = employee.map(({ first_name, id }) => ({
         name: first_name,
         value: id
-
-
     }))
-    const employeeRole = await DB.viewRole();
-    console.log(employeeRole)
 
-    const update = employeeRole.map(({id,title}) => ({
-        name: title,
-        value: id
-        
-    }))
-    console.log(update)
-    
-    
     inquirer
         .prompt([
             {
@@ -220,23 +210,23 @@ const updateEmployeeRole = async () => {
                 type: 'rawlist',
                 message: 'What employee would you like to update?',
                 choices: employeeArray
-            }
-        
+            },
 
-        ]).then(answer => {
-           console.log(answer.employee)
-           inquirer
-           .prompt([
-               {
-                name: 'roleId',
-                type: 'rawlist',
+            {
+                name: 'role',
+                type: 'input',
                 message: 'What role would you like to give the employee?',
-                choices: update
+
             }
-           ])
-           
-        }).then(res => {
-            DB.updateEmployeeRole(response)
+
+        ])
+        .then(res => {
+            connection.query(`UPDATE employees SET role_id = ${res.role} WHERE id = ${res.employee}`,
+                (err, res) => {
+                    console.table(res);
+                    start()
+                }
+            );
         })
 }
 

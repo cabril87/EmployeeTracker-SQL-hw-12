@@ -11,7 +11,7 @@
 ## Description
 For this week homework assignment, the task was to build a solution for managing a company's employees using node, inquirer, and MySQL. 
 
-![Alt Text](./Assets/gif.gif)
+![Alt Text](./Assets/SS.png)
 
 ## User Story
 
@@ -39,6 +39,6 @@ So that I can organize and plan my business
 
 
 
-[Video link] (https://drive.google.com/file/d/1V9rUDO-nTLAyvRIBmStipQVHpciknPBE/view)
+[Video link] (https://drive.google.com/file/d/1ICGktmk6L8JMXURv8mZbBW8Z5ktfYG2v/view)
 
-![Website Screenshot](./Assets/SS.png)
+
