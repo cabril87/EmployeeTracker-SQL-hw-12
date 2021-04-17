@@ -20,10 +20,10 @@ class DB {
         return this.connection.query('INSERT INTO department SET ?', department)
     }
     addEmployee(employee) {
-        return this.connection.query('INSERT INTO * FROM role', employee)
+        return this.connection.query('INSERT INTO employee SET ?', employee)
     }
-    updateEmployeeRole(update) {
-        return this.connection.query("UPDATE employee SET ? WHERE ?", update)
+    updateEmployeeRole(response) {
+        return this.connection.query("UPDATE employee SET role_id = ? WHERE = ?", response.role_id)
     }
 
 }

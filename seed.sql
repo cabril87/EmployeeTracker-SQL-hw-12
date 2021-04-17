@@ -13,11 +13,8 @@ VALUES
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES
-('Jerry', 'Springer', 1, 1),
-('James', 'Brown', 1, 3),
-('Phi', 'Long', 3, 2),
-('Colby', 'Wake', 4, 2),
-('Sherry', 'Colt', 2, 1),
-('Vanessa', 'Valdez', 2, 4),
-('Jacob', 'Tall', 2, 2),
-('Vinny', 'Calbo', 3, 3);
+('Jerry', 'Springer', 1, 3),
+('James', 'Brown', 4, 3),
+('Phi', 'Long', 3, NULL),
+('Zach', 'Brown', 2, NULL),
+('Joe', 'Seequal', 5, 3)

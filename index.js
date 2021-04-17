@@ -6,7 +6,7 @@ const start = () => {
     inquirer
         .prompt({
             name: 'action',
-            type: 'rawlist',
+            type: 'list',
             message: 'Would you like to do?',
             choices: [
                 'Add department',
@@ -89,8 +89,8 @@ const addDepartment = () => {
                 name: answers.addDepartment
             }
             DB.addDepartment(department).then(res => {
-                console.table(res);
-                start()
+                viewDepartment()
+                
             })
         })
 }
@@ -98,7 +98,7 @@ const addRole = async () => {
     const departmentView = await DB.viewDepartment();
     const departmentArray = departmentView.map(({ id, name }) => ({
         name: name,
-        Value: id
+        value: id
         
     }))
     inquirer
@@ -127,8 +127,8 @@ const addRole = async () => {
                 department_id: answer.department
             }
             DB.addRole(role).then(res => {
-                console.table(res);
-                start();
+                viewRole()
+                
 
             });
             
@@ -138,22 +138,19 @@ const addRole = async () => {
 
 const addEmployee = async () => {
     const role = await DB.viewRole();
-    const roleArray = role.map(({ title, salary, department }) => ({
-        title: title, salary: salary,
-        department_id: department, value: title
+   
+    const roleArray = role.map(({ title, id }) => ({
+        name: title, 
+        value: id
     }));
+    
     const employee = await DB.viewEmployee();
     console.log(employee)
-    const managers = employee.map(({ first_name, last_name, role_id,manager_id }) => ({
-        first_name: first_name,
-        last_name: last_name,
-        role_id:role_id,
-        manager_id:manager_id,
-        value: [first_name, last_name, role_id, manager_id]
-
-
+    const managers = employee.map(({ first_name, last_name, id }) => ({
+        name: first_name + " " + last_name ,
+        value: id
     }))
-    console.log(managers)
+    // console.log(managers)
     inquirer
         .prompt([
             {
@@ -179,31 +176,18 @@ const addEmployee = async () => {
                 choices: managers
             }
         ])
-        .then(answer => {
-            console.log(answer)
-            const role = {
-                title: answer.title,
-                salary: answer.salary || 0,
-                department_id: answer.department
-            }
-            DB.addRole(role).then(res => {
-                console.table(res);
-                
-
-            })
-            
-        })
+       
         .then(answer => {
             console.log(answer)
             const employee = {
                 first_name: answer.first_name,
                 last_name: answer.last_name,
                 role_id: answer.role_id,
-                manager_id: answer.manager_id
+                manager_id: amswer.manager_id
             }
             DB.addEmployee(employee).then(res => {
-                console.table(res)
-                start()
+                viewEmployee()
+                
             })
         })
         
@@ -212,8 +196,9 @@ const addEmployee = async () => {
 const updateEmployeeRole = async () => {
     const employee = await DB.viewEmployee();
     
-    const employeeArray = employee.map(({ first_name, role_id }) => ({
-        value: [first_name, role_id]
+    const employeeArray = employee.map(({ first_name, id }) => ({
+        name: first_name,
+        value: id
 
 
     }))
@@ -221,7 +206,8 @@ const updateEmployeeRole = async () => {
     console.log(employeeRole)
 
     const update = employeeRole.map(({id,title}) => ({
-        value: [id,title]
+        name: title,
+        value: id
         
     }))
     console.log(update)
@@ -232,29 +218,26 @@ const updateEmployeeRole = async () => {
             {
                 name: 'employee',
                 type: 'rawlist',
-                message: 'What employee would you like to choose?',
+                message: 'What employee would you like to update?',
                 choices: employeeArray
-            },
-            {
+            }
+        
+
+        ]).then(answer => {
+           console.log(answer.employee)
+           inquirer
+           .prompt([
+               {
                 name: 'roleId',
                 type: 'rawlist',
                 message: 'What role would you like to give the employee?',
                 choices: update
             }
-
-        ]).then(answer => {
-           console.log(answer)
-           const update = {
-            role_id:answer.roleId,
-            id:answer.employee
-           }
-               DB.updateEmployeeRole(update).then(res => {
-                   console.table(res);
-                   start()
-               })
+           ])
            
+        }).then(res => {
+            DB.updateEmployeeRole(response)
         })
-
 }
 
 start();
